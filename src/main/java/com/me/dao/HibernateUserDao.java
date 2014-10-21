@@ -8,13 +8,13 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.me.model.User;
+import com.me.model.users.User;
 
 @Repository
 @Transactional
 public class HibernateUserDao implements UserDao {
-	
-	@PersistenceContext
+
+	@PersistenceContext(unitName = "mainPU")
 	private EntityManager em;
 
 	@Override

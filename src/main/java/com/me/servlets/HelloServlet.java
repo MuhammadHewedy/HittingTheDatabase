@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.me.model.User;
+import com.me.model.users.User;
+import com.me.service.InventoryService;
 import com.me.service.UserService;
 
 public class HelloServlet extends HttpServlet {
@@ -27,19 +28,30 @@ public class HelloServlet extends HttpServlet {
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(getServletContext());
 
-		UserService service = context.getBean("userService", UserService.class);
+		UserService userService = context.getBean("userService",
+				UserService.class);
+		InventoryService inventoryService = context.getBean("inventoryService",
+				InventoryService.class);
 
 		String name = request.getParameter("name");
 		if (name != null && !name.isEmpty()) {
+
 			User user = new User();
 			user.setName(name);
-			service.addUser(user);
+			userService.addUser(user);
 
-			List<User> users = service.listUsers();
+			List<User> users = userService.listUsers();
 
 			for (User u : users) {
 				response.getWriter().println(u);
 			}
+
+			inventoryService.incrementUsersCount();
+			response.getWriter().println(
+					"*************************************");
+			response.getWriter().println(
+					"Total Users count: "
+							+ inventoryService.getTotalUsersCount());
 
 		} else {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST,

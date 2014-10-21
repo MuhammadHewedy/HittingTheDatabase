@@ -10,27 +10,54 @@
 
 	<context:component-scan base-package="com.me" />
 
+	<!-- mainPU Persistence Unit -->
 	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/UsersDS"
 		resource-ref="false" />
 
 	<bean id="emf"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
-		p:dataSource-ref="dataSource" p:jpaVendorAdapter-ref="hibernateJpaVendorAdapter"
-		p:packagesToScan="com.me.model" />
+		p:dataSource-ref="dataSource"
+		p:packagesToScan="com.me.model.users"
+		p:persistenceUnitName="mainPU">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+				p:showSql="true" p:database="SQL_SERVER"
+				p:databasePlatform="org.hibernate.dialect.SQLServer2008Dialect"
+				p:generateDdl="true" />
+		</property>
+	</bean>
 
-	<bean id="hibernateJpaVendorAdapter"
-		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
-		p:showSql="true" p:database="SQL_SERVER" p:databasePlatform="org.hibernate.dialect.SQLServer2008Dialect"
-		p:generateDdl="true" />
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+		p:entityManagerFactory-ref="emf" />
+	<!-- // -->
+
+
+	<!-- inventoryPU Persistence Unit -->
+	<jee:jndi-lookup id="inventoryDataSource"
+		jndi-name="java:jboss/datasources/InventoryDS" resource-ref="false" />
+
+	<bean id="inventoryEmf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		p:dataSource-ref="inventoryDataSource" 
+		p:packagesToScan="com.me.model.inventories"
+		p:persistenceUnitName="inventoryPU">
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
+				p:showSql="true" p:database="MYSQL" p:databasePlatform="org.hibernate.dialect.MySQL5Dialect"
+				p:generateDdl="true" />
+		</property>
+	</bean>
+
+	<bean id="inventoryTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+		p:entityManagerFactory-ref="inventoryEmf" />
+	<!-- // -->
 
 	<bean
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 	<bean
 		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
-		p:entityManagerFactory-ref="emf" />
-		
+
 	<tx:annotation-driven />
 
 </beans>

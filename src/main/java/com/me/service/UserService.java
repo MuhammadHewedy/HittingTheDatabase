@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.me.dao.UserDao;
-import com.me.model.User;
+import com.me.model.users.User;
 
 @Service
 public class UserService {
