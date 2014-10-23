@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -27,6 +28,27 @@ public class HelloServlet extends HttpServlet {
 
 		WebApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(getServletContext());
+
+		p(request, response, context);
+	}
+
+	void p(HttpServletRequest request, HttpServletResponse response,
+			ApplicationContext context) throws IOException {
+
+		try {
+			UserService userService = context.getBean("userService",
+					UserService.class);
+			userService.throwingExcpetionAfterInsert();
+
+			System.out.println("Will not reach here");
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+			System.out.println("recovering..");
+		}
+	}
+
+	void f(HttpServletRequest request, HttpServletResponse response,
+			ApplicationContext context) throws IOException {
 
 		UserService userService = context.getBean("userService",
 				UserService.class);

@@ -9,4 +9,6 @@ public interface UserDao {
 	void saveUser(User user);
 
 	List<User> listUsers();
+
+	void throwingExcpetionAfterInsert();
 }

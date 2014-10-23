@@ -6,12 +6,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.me.model.users.User;
 
 @Repository
-@Transactional
 public class HibernateUserDao implements UserDao {
 
 	@PersistenceContext(unitName = "mainPU")
@@ -24,6 +22,14 @@ public class HibernateUserDao implements UserDao {
 
 	public List<User> listUsers() {
 		return em.createQuery("from User", User.class).getResultList();
+	}
+
+	@Override
+	public void throwingExcpetionAfterInsert() {
+		User user = new User();
+		user.setName("Try to add me if you can");
+		em.persist(user);
+		throw new RuntimeException("some excpetion");
 	}
 
 }

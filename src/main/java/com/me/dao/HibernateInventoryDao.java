@@ -7,12 +7,10 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.me.model.inventories.Inventory;
 
 @Repository
-@Transactional("inventoryTransactionManager")
 public class HibernateInventoryDao implements InventoryDao {
 
 	@PersistenceContext(unitName = "inventoryPU")
